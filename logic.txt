@@ -1,0 +1,42 @@
+a dat hash la password
+
+username: username -> username simplu
+
+server -> web = response = newUser FARA parola lui pt. a nu fi compromisa
+
+token = JWT ->  informatii despre client = wristband
+cookie = a purta la mana wristband-ul
+
+token -> cookie -> response
+
+password === hash_password?
+await bcrypt.compare(password, hash_password || '')
+we used (|| '') in case the hash_password is undefined
+if it is undefined the bcrypt will throw errors
+
+cookie-ul il trimit la response, nu in pun in DB
+
+user-ul practic cu acel cookie va umbla prin site-ul meu si va face chestiile pe care le vreau eu sa-i-le permit
+
+token = bratara de identificare
+cookie = purtatul bratarii
+
+cum dau decode la token? 
+encode : 
+  token = jwt.sign(payload, process.env.JWT_SECRET);
+
+decode :
+  jwt.verify(token, process.env.JWT_SECRET);
+
+decode == falsy value -> the token was altered = NO ACCESS
+
+const user = await User.findById(decoded.userId).select("-password");
+
+Ce face acest protectRoute middleware?
+-dupa cum ii spune si numele protejeaza accesul interzis pe anumite parti ale site-ului
+-request-ul are un token in el pe care il verific daca exista si dupa aceea ii dau decode cu jwt_secret pt a verifica ca nu a fost alterat.
+-decode.userId are id-ul userului din MongoDB care incearca sa faca ceva pe site;
+-in request adauga o sectie noua unde pun informatiile user-ului (fara parola) : User.findById(decoded.userId).select("-password");
+- voi lua ce am nevoie din request la urmatorul middleware
+
+logout: distroy the cookie -> res.cookie('jwt', '', {maxAge: 0})
