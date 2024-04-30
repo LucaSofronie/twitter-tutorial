@@ -40,3 +40,19 @@ Ce face acest protectRoute middleware?
 - voi lua ce am nevoie din request la urmatorul middleware
 
 logout: distroy the cookie -> res.cookie('jwt', '', {maxAge: 0})
+
+
+nu poti sa-ti dai follow/unfollow singur
+
+a facut un mongoose model si pentru notification care deocamdata are doar doua tipuri: enum: ['follow', 'like']
+
+in suggested bar nu ai cum sa apari si tu
+
+const users = await User.aggregate([
+      {
+        $match: {
+          _id: { $ne: userId }, (ne = not equal)
+        },
+      },
+      { $sample: { size: 10 } },
+    ]);
