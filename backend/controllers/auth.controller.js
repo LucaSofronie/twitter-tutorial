@@ -2,6 +2,9 @@ const User = require("../models/user.model");
 const bcrpyt = require("bcryptjs");
 const generateTokenAndSetCookie = require("../lib/utils/generateToken");
 
+// *** @route /api/auth/...
+
+// @route /signup
 // * @desc
 // 1) iei datele din req si le verifici
 // 2) encrypt the password
@@ -84,13 +87,13 @@ const signup = async (req, res) => {
   }
 };
 
+// @route /login
 // * @desc
 // 1) iei username si password din request
 // 2) identifici user in MonogoDB cu username
 // 3) compari client's password cu MongoDB user's password cu bcrypt.compare(pass, hash_pass || '')
 // 4) generateTokenAndSetCookie
 // 5) response = user fara password
-
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -120,6 +123,7 @@ const login = async (req, res) => {
   }
 };
 
+// @route /logout
 const logout = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
@@ -129,6 +133,7 @@ const logout = async (req, res) => {
   }
 };
 
+// @route /me
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");

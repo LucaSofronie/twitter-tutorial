@@ -1,0 +1,114 @@
+(1) Auth Routes and Controllers
+  1.0 @route /api/auth/
+
+  1.01 generateTokenAndSetCookie
+    //1) jwt.sign(user.id) cu jwt secret
+    //2) res.cookie('jwt', token, {...})
+
+  1.02 ProtectRoute (1.{2, 3, 4})
+    //1) iei jwt din request
+    //2) ii dai decode si vezi daca e legit
+    //3) user._id = decode.id
+
+  1.1 Signup  @route /signup
+    // 1) iei datele din req si le verifici
+    // 2) encrypt the password
+    // 3) faci un instance of User
+    // 4) ii atasezi res un cookie cu jwt   cu payload = user._id
+    // 5) il salvezi in MongoDB
+    // 6) return response cu user Fara password
+
+  1.2 Login   @route /login
+    // 1) iei username si password din request
+    // 2) identifici user in MonogoDB cu username
+    // 3) compari client's password cu MongoDB user's password cu bcrypt.compare(pass, hash_pass || '')
+    // 4) generateTokenAndSetCookie
+    // 5) response = user fara password
+
+  1.3 Logout   @route /logout
+    //1) ii stergi efective token-ul = access 0
+    res.cookie("jwt", "", { maxAge: 0 });
+
+  1.4 GetMe   @route /me
+  //1) iei din DB dupa req.user._id si il dai in response fara password
+
+
+
+(2) User Routes and Controllers
+  2.0 @route /api/users/
+
+  2.1 getUserProfile  @route /profile/:username
+    //1)il iei din DB si il dai fara password
+
+  2.2 getSuggestedUsers  @route /suggested
+    //1) 4 oameni pe care nu ii urmaresc deja
+    //2) nu le da parola pe frontend
+
+  2.3 followUnfollowUser  @route /follow/:id
+    //1) followed -> unfollow;   not follow -> follow
+    //2) modify my following[] and his followers[]
+    //3) Nu ai voie sa-ti dai fllw/unfllw singur
+    //4) follow -> Send notification to the user - save it into MongoDB
+
+  2.4 updateUser  @route /update
+    //1) iei toate datele care se pot modifica
+    //2) current & new password -- true --> hash new => DB
+    //3) verify existing email and username
+    //4) response fara password
+
+
+
+(3) Post Routes and Controllers
+  3.0 @route /api/posts
+
+  3.01 Post Model DB
+    //1) userId
+    //2)text - string, required
+    //3)likes - array with users
+    //4)comments - array with text and users
+    //5)img
+
+  3.02 ProtectRoute -> jwt => req.user._id
+
+  3.1 CreatePost  @route /create
+    //1) verify the existance of user
+    //2) no img & no text -> 400
+    //3) img -> cloudinary; await cloudinary.uploader.upload(img); img = uploadedResponse.secure_url
+
+  3.2 DeletePost  @route /:id
+    //1) vezi daca exista acel id pt Post
+    //2) vezi cine vrea sa-l stearga user === PostUser
+    //3) daca are imagine o stergi din cloudinary
+    //4) stergi din DB
+
+  3.3 commentOnPost   @route /comment/:id
+    //1) verifici Post si text
+    //2) faci un comment = {userId, text}
+    //3) ii dai push in post.comments
+    //4) salvezi in DB
+
+  3.4 likeUnlikePost  @route /like/:id
+    //1) iei din MongoDb Post-ul si verifici ca exista
+    //2) vezi daca req.user._id i-a dat like deja sau nu: like->unlike, unlike->like
+    //3) model.updateOne({filter}, {update}) update=$push: {likes: userId}
+    //4) like Post => create notification
+    //5) update the user likedPosts  
+
+  3.5 getAllPosts   @route /all
+    //1) model.find().sort({createdAt: -1})
+    //2) if (posts.length===0)  res.status(200).json([])  else res.status(200).json(posts);
+    //3) use populate({path: 'user', select:'-password'})
+
+  3.6 getLikedPosts   @route /likes/:id
+    //1) vezi daca exista user
+    //2) cauta in Posts postarile la care user le-a dat like: await Post.find({_id: {$in: user.likedPosts}}).populate(user/pass).populate(comments.user/pass)
+
+  3.7 getPostsFromFollowing   @route /following
+    //1) verifici user
+    //2) get following
+    //3) await Post.find({user: {$in: following}}).populate(user/pass).populate(comment.user/pass);
+
+  3.8 getUserPosts    @route /user/:username
+    //1) get the user from DB and verify
+    //2) iei din Post DB toate postarile care il au ca user (creator) pe user-ul meu si dai populate la user si comment.user -password
+

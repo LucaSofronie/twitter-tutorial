@@ -1,0 +1,22 @@
+Foloseste TRyCatch la fiecare chestie din express server pt a da handle profesional la errori
+
+verifica mereu daca exista acel User in DB
+
+foloseste .populate() in mongoose pt a inlocui 'userId' cu informatiile lui: nume, username etc.
+lets you reference documents in other collections without duplicating data.
+  how to do it:
+    //1) userSchema = {username, email, password}
+    //2) postSchema = {title, author: 
+              {type:userId, ref='User'}}
+
+    //3) await Post.findOne({title: ...}).populate('author', 'username email'). //without password
+    
+    //4) 
+    const posts = await Post.find().sort({     createdAt: -1 }).populate({
+      path: "user",
+      select: "-password",
+    })
+    .populate({
+        path: "comments.user",
+        select: "-password",
+      });;

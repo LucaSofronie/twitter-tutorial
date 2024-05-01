@@ -3,7 +3,9 @@ const Notification = require("../models/notification.model");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("cloudinary").v2;
 
-// @route /api/users/profile/:username
+// *** @route /api/users/...
+
+// @route /profile/:username
 const getUserProfile = async (req, res) => {
   const { username } = req.params;
 
@@ -19,6 +21,7 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// @route /follow/:id
 // @desc
 // 1) ai id si req.user._id (din protecteRoutes)
 // 2) iei useri si verifici existenta lor
@@ -27,7 +30,6 @@ const getUserProfile = async (req, res) => {
 // 3.2) unfollow: $pull in followers si following
 
 // @route /api/users/follow/:id
-
 const followUnfollowUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -77,13 +79,12 @@ const followUnfollowUser = async (req, res) => {
   }
 };
 
-// @route /api/users/suggested
+// @route /suggested
 // @desc
 // 1) iei userId
 // 2) iei 10 oameni random fara userId
 // 3) vezi cati dintre ei nu ii ai la follow
 // 4) iei primii 4 si le setezi parola la Null pt a o nu face publica in frontend
-
 const getSuggestedUsers = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -115,11 +116,11 @@ const getSuggestedUsers = async (req, res) => {
   }
 };
 
+// @route /update
 // @desc
 // 1) iei toate datele posibile din req.body, tot ce poti modifica la un cont de Twitter
 // 2) vezi daca a pus currentPassword sau newPassword => vrea sa schimbe parola -> ... pui cu hash newPassword si in frontend o dai ca null
 // 3) daca vrea sa dea update la username sau email care trebuie sa fie unice verifici existenta lor in DB
-
 const updateUser = async (req, res) => {
   const { fullName, email, username, currentPassword, newPassword, bio, link } =
     req.body;
