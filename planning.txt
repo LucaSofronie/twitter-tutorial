@@ -112,3 +112,25 @@
     //1) get the user from DB and verify
     //2) iei din Post DB toate postarile care il au ca user (creator) pe user-ul meu si dai populate la user si comment.user -password
 
+
+
+(4) Notification Routes and Controllers
+
+  4.0 Notification Schema
+    //1) from 
+    //2) to
+    //3) type -> enum: ['follow', 'like']
+    //4) read
+  
+  4.1 Get Notifications
+    //1) get user from DB
+    //2) update his notifications with read: true =: await Notification.updateMany({to: userId},  {read: true})
+
+  4.2 Delete Notification   @route /notifications/:id
+    //1) get user and notification -check
+    //2) check n.to === userId
+    //3) await Notification.findByIdAndDelete(id);
+    
+  4.3 Delete Notifications
+    //1) get user from DB
+    //2) deleteMany
