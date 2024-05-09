@@ -67,5 +67,6 @@ const deleteNotifications = async (req, res) => {
 
 module.exports = {
   getNotifications,
+  deleteNotification,
   deleteNotifications,
 };

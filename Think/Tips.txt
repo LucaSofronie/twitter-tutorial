@@ -20,3 +20,8 @@ lets you reference documents in other collections without duplicating data.
         path: "comments.user",
         select: "-password",
       });;
+
+// la fel si pentru logo si alte img 
+
+<Link> to='profile/${postOwner.username} img=src{postOwner.profileImg}</Link>
+// si pt username si pt numele lui

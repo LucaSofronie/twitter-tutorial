@@ -58,3 +58,37 @@ const users = await User.aggregate([
     ]);
 
 
+      REACT
+
+la pagina la signUp a folosit 2 logouri pt a pastra pagina responsive pt dispozitive
+
+pt lg:flex
+logo si form
+
+pt lg:hidden
+logo in form 
+
+
+Sidebar and RightPanel will be used in every page so we keep them out of Routes
+
+
+RightPanel cand isLoading voi pune un skeleton adica o masca pt a nu arata ca nu am deja datele necesare si pt asta voi face in components/skeletons/RightPanelSkeleton.jsx o matrita care se pliaza perfect cu produsul final si care va avea niste efecte de LOADing
+
+Upload a POST
+icon, input (type='file', hidden, ref={imgRef})
+icon -> imgRef.current.click(); ==> 
+input.onChange() => handleClicked(e) ==>
+file = e.target.files[0]
+  if (file) ->
+    reader = new fileReader
+    reader.onload() -> setImg(file)
+    convert to base64 with reader.readAsDataURL(file)
+
+if (img)
+  x icon - onClick => setImg(null), imgRef.current.value = null
+
+
+Posts
+  //1) is Loading -> skeleton
+  //2) there are no Posts -> message
+  //3) display the Posts
