@@ -25,3 +25,22 @@ lets you reference documents in other collections without duplicating data.
 
 <Link> to='profile/${postOwner.username} img=src{postOwner.profileImg}</Link>
 // si pt username si pt numele lui
+
+
+daca ai un State de genul password, username, fullName...
+le pui in HTML la name='password' / 'fullName' etc
+ca mai apoi sa poti face doar o functie:
+onChange: setState = {...state, [e.target.name]: e.target.value}  folosesti e.target.name 
+
+
+
+React Query
+useQuery -> get data
+useMutation -> modify data
+
+useQuery is triggered by
+  1) the mounting of your component
+  2) the change of queryKey
+  3) custom settings
+
+Nu afisezi sidebar si rightPanel cand esti la login / signup -> { authUser && <Sidebar/>}

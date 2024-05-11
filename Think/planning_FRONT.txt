@@ -1,0 +1,82 @@
+  1) in main.jsx
+    BrowserRouter -> change URL -> No server req
+      QueryClientProvider -> manage server reqs
+        App -> my application
+
+  2) in App.jsx
+    Sidebar
+    Routes
+      path = '/' -> HomePage
+      path = '/login' -> LoginPage
+      path = '/signup' -> SignupPage
+      path = '/notifications' -> NotificationPage
+      path = '/profile/:username' -> ProfilePage
+    RightPanel
+    Toaster -> just for initialization
+
+  3) in Sidebar
+    some <Link>
+      logo -> path = '/'
+      home -> path = '/'
+      notifications -> path = '/notifications'
+      profile  -> path = '/profile/:username'
+      profile (avatar + name + username)
+    you have the user's data
+    for Logout press icon on bottom
+
+  4) in RightPanel
+    some <Link> to 'profile/:username' where 
+    username comes from USERS_FOR_RIGHT_PANEL array from Db
+    profile (avatar + name + username)
+    Skeleton feature
+
+  5) in Routes
+    0) for development i use proxy='http://localhost:5000' 
+    1) in HomePage  '/'
+      useState for 'feedType' = ['forYou', 'following'];
+      header with 'forYou' & 'following'
+
+      !!! TODO
+      create Post Input -> <CreatePost/>
+        avatar
+        input text
+        input file accept='image/*' hidden ref = {imgRef}
+        icon onClick -> imgRef.current.click();
+        imgRef onClick ->> (PC default) + set imgState 
+      display the Posts -> <Posts/>
+
+    2) SignupPage '/signup'
+      useState pt client's info
+      form
+        email, username, fullName, Password + 
+          signUp button
+          hidden error message -> triggered by isError VVV
+        onSubmit: useMutation from React Query and send to server
+        onChange: state: {...state, [e.target.name]: e.target.value}
+      Sign in button -> <Link to='/login'>
+
+    3) in LoginPage
+      is the same as above
+
+  6) Protect Routes
+    authUser === true 
+      /login   -> HomePage
+      /signup  -> HomePage
+
+    authUser === false
+      /     -> login
+      /notifications  -> login
+      /profile/:username  -> login
+
+    cand faci switch intre taburi react query da trigger din nou la useQuery si nu vrem asta
+      refetchOnWindowFocus: false
+
+    retry: false 
+
+    we use queryKey to give a unique name to our query and refer to it later
+
+    Login / Signup -> refetch the getMe and update authUser:
+      const queryClient = useQueryClient();
+      queryClient.invalidateQueries({queryKey: ['authUser']})
+
+    authUser is the data from useQuery in App.jsx and it's locally stored
