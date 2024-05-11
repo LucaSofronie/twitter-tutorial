@@ -102,3 +102,6 @@ React Query - cum pot folosi aceleasi date intre componente diferite?
   refetch vs invalidateQueries
     refetch = now
     invalidateQueries -> spune lui React Query ca query-ul cu queryKey:     a expirat, asadar data viitoare cand vrea sa-l foloseasca va trebui sa-i dea refetch.
+
+Create Posts
+  cand ai img el merge la server cu base64 string-ul tau si de acolo il pune in cloudinary si dupa il salveaza in Db ca link la cloudinary
