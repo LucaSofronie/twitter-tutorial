@@ -98,3 +98,7 @@ React Query - cum pot folosi aceleasi date intre componente diferite?
   dupa ce au fost luate datele din Api ele vor fi stocate in React Query cache si le pot accesa astfel:
   const {data} = useQuery({queryKey: ['authUser']})
   si bam am luat datele colectate fara un new request to api
+
+  refetch vs invalidateQueries
+    refetch = now
+    invalidateQueries -> spune lui React Query ca query-ul cu queryKey:     a expirat, asadar data viitoare cand vrea sa-l foloseasca va trebui sa-i dea refetch.
