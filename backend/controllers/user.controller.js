@@ -103,7 +103,7 @@ const getSuggestedUsers = async (req, res) => {
     console.log(usersFollowedByMe.following);
 
     const filteredUsers = users.filter(
-      (user) => !usersFollowedByMe.following.includes(user)
+      (user) => !usersFollowedByMe.following.includes(user._id)
     );
     const suggestedUsers = filteredUsers.slice(0, 4);
 
