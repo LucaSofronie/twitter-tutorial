@@ -44,3 +44,8 @@ useQuery is triggered by
   3) custom settings
 
 Nu afisezi sidebar si rightPanel cand esti la login / signup -> { authUser && <Sidebar/>}
+
+Posts - Image
+  image -> binary data -> base64 encoded string
+  save the string to Db
+  paste it to React
