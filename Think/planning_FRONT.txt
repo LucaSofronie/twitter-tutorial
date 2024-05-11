@@ -80,3 +80,18 @@
       queryClient.invalidateQueries({queryKey: ['authUser']})
 
     authUser is the data from useQuery in App.jsx and it's locally stored
+    
+  7) Posts -> Post
+    //  Cum luam Posts din Db
+    //1) folosing useQuery(queryKey: ['posts'], queryFn: getPostsAPI)
+    //2) dupa request ele vor fi salvate in cache de catre React Query si le pot accesa prin useQuery(queryKey: );
+
+    // Posts
+      //1) iau din queryKey: ['posts'] toate posts
+      //2) pe fiecare il duc in Post
+      //3) cand schimb feedType-ul am useEffect si dau refetch la getPostAPI cu useQuery
+
+    // Cum stergem si sincronizam cu UI
+    //1) stergi Post din Db
+    //2) invalidateQueries({queryKey: ['posts']}) -> ii spui ca a expirat
+    //3) Posts foloseste useQuery -> va detecta ca unul din ele a expirat si da refetch
