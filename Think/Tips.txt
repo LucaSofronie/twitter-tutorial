@@ -49,3 +49,8 @@ Posts - Image
   image -> binary data -> base64 encoded string
   save the string to Db
   paste it to React
+
+
+Right Panel
+  daca nu exista niciun suggestedUser
+  creeaza un div gol care sa pastreze acel spatiu ocupat si MainPage-ul sa nu-si ia strech
