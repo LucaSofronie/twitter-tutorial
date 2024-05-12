@@ -224,13 +224,21 @@ const likeUnlikePost = async (req, res) => {
     if (userLikedPost) {
       // Unlike
       await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
-      res.status(200).json({ message: "Post unliked successfully" });
-
       await User.updateOne({ _id: userId }, { $pull: { likedPosts: postId } });
+
+      // scot like-ul user-ului actual
+      const updatedLikes = post.likes.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+
+      res.status(200).json(updatedLikes);
+
+      //4:07:37
+      //4:55:17
+      //48min 40sec in 4h
     } else {
       // like
       await Post.updateOne({ _id: postId }, { $push: { likes: userId } });
-
       await User.updateOne({ _id: userId }, { $push: { likedPosts: postId } });
 
       const notification = new Notification({
@@ -240,7 +248,10 @@ const likeUnlikePost = async (req, res) => {
       });
       await notification.save();
 
-      res.status(200).json({ message: "Post liked successfully" });
+      post.likes.push(userId);
+      const updatedLikes = post.likes;
+
+      res.status(200).json(updatedLikes);
     }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });

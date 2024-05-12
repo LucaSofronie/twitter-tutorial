@@ -105,3 +105,13 @@ React Query - cum pot folosi aceleasi date intre componente diferite?
 
 Create Posts
   cand ai img el merge la server cu base64 string-ul tau si de acolo il pune in cloudinary si dupa il salveaza in Db ca link la cloudinary
+
+Custom hook pt FollowUnfollow
+
+
+toast.success("liked");
+      // bad UX it refetch all the posts
+      // queryClient.invalidateQueries({ queryKey: ["posts"] });
+      // instead update the cache directly for that post
+      // deci daca noi vrem sa dam update la post fiind ca am modificat likes-urile asta ar insemna ca trebuie sa marcam toate post-urile 'posts' ca fiind expirate doar din cauza unuia ceea ce va face un bad UX ( user experience ). Cand MainPage-ul meu va vedea ca 'posts' sunt marcate ca expirate va da re-fetch la server si o sa-si ia toate update. Ca sa nu se intample chestia asta, vom modifica noi in liniste informatiile (pe care le foloseste React-ul) din query 'posts' pt post-ul care ne intereseaza:
+        queryClient.setQueryData(['posts'], (oldData) => ...(map + if)...)
