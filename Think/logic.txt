@@ -115,3 +115,5 @@ toast.success("liked");
       // instead update the cache directly for that post
       // deci daca noi vrem sa dam update la post fiind ca am modificat likes-urile asta ar insemna ca trebuie sa marcam toate post-urile 'posts' ca fiind expirate doar din cauza unuia ceea ce va face un bad UX ( user experience ). Cand MainPage-ul meu va vedea ca 'posts' sunt marcate ca expirate va da re-fetch la server si o sa-si ia toate update. Ca sa nu se intample chestia asta, vom modifica noi in liniste informatiile (pe care le foloseste React-ul) din query 'posts' pt post-ul care ne intereseaza:
         queryClient.setQueryData(['posts'], (oldData) => ...(map + if)...)
+
+if isCommenting / isLiking etc. -> return

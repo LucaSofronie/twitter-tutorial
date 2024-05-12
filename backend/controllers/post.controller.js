@@ -202,7 +202,15 @@ const commentOnPost = async (req, res) => {
     post.comments.push(comment);
     await post.save();
 
-    res.status(200).json(post);
+    const { comments: updatedComments } = await Post.findOne({ _id: postId })
+      .select("comments")
+      .populate({
+        path: "comments.user",
+        select: "-password",
+      });
+    console.log(updatedComments);
+
+    res.status(200).json(updatedComments);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
     console.log("Error from commentOnPost controller: ", error);

@@ -8,21 +8,23 @@ import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
+import { formatPostDate } from "../../utils/date/index";
 
 const Post = ({ post }) => {
   const [comment, setComment] = useState("");
-  const postOwner = post.user;
 
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+
+  const queryClient = useQueryClient();
+
+  const postOwner = post.user;
+
   const isLiked = post.likes.includes(authUser._id);
 
   const isMyPost = authUser._id === post.user._id;
 
-  const formattedDate = "1h";
+  const formattedDate = formatPostDate(post.createdAt);
 
-  const isCommenting = false;
-
-  const queryClient = useQueryClient();
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
       try {
@@ -34,7 +36,7 @@ const Post = ({ post }) => {
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Something went wrong");
-        console.log("deleted");
+        // console.log("deleted");
         return data;
       } catch (error) {
         throw new Error(error);
@@ -46,14 +48,6 @@ const Post = ({ post }) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
-
-  const handleDeletePost = () => {
-    deletePost();
-  };
-
-  const handlePostComment = (e) => {
-    e.preventDefault();
-  };
 
   const { mutate: likeUnlikePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
@@ -89,6 +83,50 @@ const Post = ({ post }) => {
     },
   });
 
+  const { mutate: postComment, isPending: isCommenting } = useMutation({
+    mutationFn: async (text) => {
+      try {
+        const res = await fetch(`/api/posts/comment/${post._id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || "Something went wrong");
+        // console.log("got in frontend", data);
+        return data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: (updatedComments) => {
+      toast.success("Comment posted successfully");
+      queryClient.setQueryData(["posts"], (oldData) => {
+        const x = oldData.map((p) => {
+          if (p._id === post._id) return { ...post, comments: updatedComments };
+          return p;
+        });
+        // console.log("from frontend", x);
+        return x;
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleDeletePost = () => {
+    deletePost();
+  };
+  const handlePostComment = (e) => {
+    e.preventDefault();
+    if (isCommenting) return;
+    postComment(comment);
+    setComment("");
+  };
   const handleLikePost = () => {
     if (isLiking) return;
     likeUnlikePost();
