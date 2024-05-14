@@ -117,3 +117,35 @@ toast.success("liked");
         queryClient.setQueryData(['posts'], (oldData) => ...(map + if)...)
 
 if isCommenting / isLiking etc. -> return
+
+
+noi cand modificam ceva in Db trebuie sa o aducem si in frontend. Asta se poate face prin fetch the data through the server with reqests. Dar daca eu vreau sa modific doar ceva minor la un post, inseamna ca trebuie sa dau refetch la toate post-urile, tinand cont ca eu le am stocate in cache-ul de la React Query? NU. 
+  Cand schimb ceva
+    schimbi in DB
+    dai fetch la new Data (request) -> in query's cache
+    frontend ia din cache datele
+  Cand dau request el de fapt ia response-ul si il baga in cache
+  Eu pot proceda si astfel: 
+    schimbi in DB -> response = new data
+    NU dai fetch ci schimbi manual in query's cache
+    frontend ia din cache
+  exact acelasi rezultat il voi avea, dar nu o sa am lag din cauza a prea multe request-uri
+  queryClient.setQueryData(["posts"], (oldData) => {})
+
+@route /api/users/:username
+   data from my server
+   am facut un query nou care stocheaza in cache informatii profilul la care ma uit in momentul asta: al meu sau al alt cuiva
+   queryKey: userProfile
+   cand merg la alt profil eu trebuie sa dau alt request catre server + update UI
+   cum aflu cand se schimba profilul la care ma uit? 
+    eu iau {username} = useParams(); [ (url)/profile/:username ];
+    si vreau sa vad cand se modifica username asa a voi avea un UseEffect cu ['username']
+      in el vreau sa dau refetch la data asa ca queryFn de unde ii dau fetch trebuie facuta din nou: {refetch} = useQuery(queryFn:...)
+      deci o sa ai
+        const {username} = useParams();
+        const {..., refetch, isRefetching} = useQuery(...)
+        useEffect(()=>{ refetch() }, ['username']) 
+  
+Posts - feedType
+useEffect() cu feedType dar si cu username 
+  keep the profile and his data in sync

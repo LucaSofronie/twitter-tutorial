@@ -54,3 +54,7 @@ Posts - Image
 Right Panel
   daca nu exista niciun suggestedUser
   creeaza un div gol care sa pastreze acel spatiu ocupat si MainPage-ul sa nu-si ia strech
+
+
+To get the /:username from url do like this
+  cosnt {username} = useParams();   DONE

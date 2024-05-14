@@ -292,3 +292,7 @@ const Post = ({ post }) => {
   );
 };
 export default Post;
+
+//4:55:17
+//5:13:08
+// 17min 51sec in 3h
