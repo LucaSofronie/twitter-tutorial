@@ -10,20 +10,24 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/date";
+import useFollow from "../../hooks/useFollow";
+import toast from "react-hot-toast";
+import useUpdateUserProfile from "../../hooks/useUpdateUserProfile";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
   const [feedType, setFeedType] = useState("posts");
 
-  const coverImgRef = useRef(null);
+  let coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
 
-  const { username: authUsername } = useQuery({ queryKey: ["authUser"] });
+  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
   const { username } = useParams();
-  const isMyProfile = username === authUsername;
+
+  const { followUnfollow: follow, isPending } = useFollow();
 
   const {
     data: user,
@@ -44,7 +48,12 @@ const ProfilePage = () => {
     },
   });
 
+  // cover img and profile img
+  const { updateProfile, isUpdatingProfile } = useUpdateUserProfile();
+
+  const isMyProfile = user?._id === authUser._id;
   const memberSinceDate = formatMemberSinceDate(user?.createdAt);
+  const amIFollowing = authUser?.following.includes(user?._id);
 
   useEffect(() => {
     refetch();
@@ -137,21 +146,33 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="flex justify-end px-4 mt-5">
-                {isMyProfile && <EditProfileModal />}
+                {isMyProfile && <EditProfileModal authUser={authUser} />}
                 {!isMyProfile && (
                   <button
                     className="btn btn-outline rounded-full btn-sm"
-                    onClick={() => alert("Followed successfully")}
+                    onClick={() => {
+                      follow(user?._id);
+                      console.log(amIFollowing);
+                    }}
                   >
-                    Follow
+                    {isPending && "Loading..."}
+                    {!isPending && amIFollowing && "Unfollow"}
+                    {!isPending && !amIFollowing && "Follow"}
                   </button>
                 )}
                 {(coverImg || profileImg) && (
                   <button
                     className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-                    onClick={() => alert("Profile updated successfully")}
+                    onClick={async () => {
+                      await updateProfile({
+                        coverImg,
+                        profileImg,
+                      });
+                      setProfileImg(null);
+                      setCoverImg(null);
+                    }}
                   >
-                    Update
+                    {isUpdatingProfile ? "Updating..." : "Update"}
                   </button>
                 )}
               </div>
@@ -176,7 +197,7 @@ const ProfilePage = () => {
                           rel="noreferrer"
                           className="text-sm text-blue-500 hover:underline"
                         >
-                          youtube.com/@asaprogrammer_
+                          {user?.bio}
                         </a>
                       </>
                     </div>

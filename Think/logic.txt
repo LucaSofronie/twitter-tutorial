@@ -149,3 +149,7 @@ noi cand modificam ceva in Db trebuie sa o aducem si in frontend. Asta se poate 
 Posts - feedType
 useEffect() cu feedType dar si cu username 
   keep the profile and his data in sync
+
+mutateAsync cand dau update la img
+  await fn
+  set the imgs to null

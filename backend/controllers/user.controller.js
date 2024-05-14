@@ -182,7 +182,7 @@ const updateUser = async (req, res) => {
 
     // new coverImg
     if (coverImg) {
-      if (user.converImg) {
+      if (user.coverImg) {
         await cloudinary.uploader.destroy(
           user.coverImg.split("/").pop().split(".")[0]
         );
@@ -215,7 +215,7 @@ const updateUser = async (req, res) => {
     user.bio = bio || user.bio;
     user.link = link || user.link;
     user.profileImg = profileImg || user.profileImg;
-    user.coverImg = coverImg || user.converImg;
+    user.coverImg = coverImg || user.coverImg;
 
     user = await user.save();
     user.password = null; // doesn't modify the DB
