@@ -42,3 +42,6 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectMongoDB();
 });
+
+//6:03:05 in 30min
+// FINISH
